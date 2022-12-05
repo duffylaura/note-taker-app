@@ -40,3 +40,5 @@ api.post('/', (req, res) => {
         });
     }
 )
+
+module.exports = api; 
