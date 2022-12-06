@@ -12,6 +12,7 @@
     "clog-js": "^0.0.1",
     "express": "^4.16.4",
     "express-session": "^1.17.3",
+    "uniqid": "^5.4.0",
     "uuid": "^9.0.0"
   }
 }
