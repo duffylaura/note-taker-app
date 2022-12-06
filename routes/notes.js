@@ -1,13 +1,15 @@
 const fs = require('fs');
 const util = require('util');
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuid} = require('uuid');
 const api = require('express').Router();
+const database = require('../db/db.json');
 
 //GET request to show saved notes
 // GET /api/notes should read the db.json file and return all saved notes as JSON.
 // use fs read file
 api.get('/notes', (req, res)=>{
-    fs.readFile('../db/db.json',(err,data)=>{
+    // fs.readFile( filename, encoding, callback_function )
+    fs.readFile('../db/db.json', 'utf8', (err,data)=>{
         if (err) {
             console.error(err);
         } else { 
@@ -26,19 +28,36 @@ api.get('/notes', (req, res)=>{
 
 api.post('/', (req, res) => {
     const { title, text } = req.body;
-    const note  = {
-        title,
-        text,
-        id: uuid(),
-    };
-
-    util.promisify(fs.readFile("./db/db.json"))
-    .then(data => JSON.parse(data))
-    .then((data) => {
-        data.push(note)
-        util.promisify(fs.writeFile(data),JSON.stringify(data)) 
+    if (title && text) {
+        const newNote  = {
+            title,
+            text,
+            id: uuid(),
+        };
+        //fs.readFile( filename, encoding, callback_function )
+        fs.readFile('../db/db.json', 'utf8',(err,data)=>{
+            if (err) {console.error(err)}
+            else {
+                const newDatabase = JSON.parse(data);
+                newDatabase.push(newNote);
+                database = newDatabase;
+                // fs.writeFile( file, data, options, callback )
+                fs.writeFile('../db/db.json', JSON.stringify(newDatabase), 'utf8', (err) => {
+                    if (err) {console.err(err)}
+                    else {console.info('Successful writeFile operation!')}
+                })
+            }
         });
+
+        const response = {status: 'success', body: newNote };
+        
+        res.json(response);
     }
-)
+
+    else {
+        res.json('Error! Cannot make post request.')
+    }
+});
+
 
 module.exports = api; 

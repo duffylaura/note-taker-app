@@ -20,7 +20,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html
 app.get('/notes', (req, res) =>res.sendFile(path.join(__dirname, '/public/notes.html')));
 
 // Wildcard route to direct users to a 404 page
-app.get('*', (req, res) =>res.sendFile(path.join(__dirname, 'public/pages/404.html')));
+app.get('*', (req, res) =>res.sendFile(path.join(__dirname, 'public/404.html')));
 
 //Click on link when server starts  
 app.listen(PORT, () => console.log(`Now listening at http://localhost:${PORT}`));
