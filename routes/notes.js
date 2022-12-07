@@ -29,11 +29,15 @@ api.get("/notes", (req, res) => {
 //add it to the db.json file, and then return the new note to the client. 
 //Use an npm package for giving notes unique IDs (required above)
 
-api.post('/notes', async (req, res) => {
+api.post('/notes', (req, res) => {
     const { title, text } = req.body;
     const newNote  = {title, text, id: uuidv4()};
+    //read file of the data base, to check what is currently in there
+    //Parse information (parse out of string into object)
+    //THEN push 
     database.push(newNote);
-    await fs.writeFile('../db/db.json', JSON.stringify(database,null,4));
+    //
+    util.promisify(fs.writeFile('../db/db.json', JSON.stringify(database,null,4)));
     const response = {status: 'success', body: JSON.stringify(database)};
     res.json(response);
 });
