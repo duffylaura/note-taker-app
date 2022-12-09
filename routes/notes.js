@@ -13,6 +13,19 @@ notes.get('/', (req, res) => {
     res.json(JSON.parse(data)));
   });
 
+
+//get notes by id
+notes.get("/:id", (req, res) => {
+    const id = req.params;
+    readFromFile("./db/db.json").then((data) => 
+    JSON.parse(data))
+    .then((json) => {
+    const result = json.filter(
+        (note) => note.id === id);
+    return result.length > 0;
+      });
+  });
+
 // POST /api/notes should receive a new note to save on the request body, 
 //add it to the db.json file, and then return the new note to the client. 
 //Use an npm package for giving notes unique IDs (required above)
@@ -25,7 +38,7 @@ notes.post('/', (req, res) => {
     //THEN push 
     if (title && text) {
         const newNote = {
-            title, text, note_id: uuidv4(), 
+            title, text, id: uuidv4(), 
         };
         readAndAppend(newNote, './db/db.json');
         const response = {
